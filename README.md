@@ -1,69 +1,59 @@
+# Servidor Web em Modo Access Point com ESP32-C3
+
+Este projeto transforma um microcontrolador ESP32-C3 em um ponto de acesso (Access Point) Wi-Fi. Ele hospeda um servidor web local que permite controlar o LED da placa através de uma página web com um design moderno em dark mode.
+
+É uma solução autônoma para controle de dispositivos via Wi-Fi, ideal para cenários onde não há uma infraestrutura de rede existente.
+
 | Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-H2 | ESP32-P4 | ESP32-S2 | ESP32-S3 |
 | ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- | -------- | -------- |
 
-# HTTPS server
+## Funcionalidades
 
-This example creates an HTTPS server with SSL/TLS support using **ESP-TLS** that serves a simple HTML page when you visit its root URL.
+* **Modo Access Point (AP):** O ESP32-C3 cria sua própria rede Wi-Fi.
+* **Servidor Web HTTP:** Hospeda uma página web para interação com o usuário.
+* **Controle de Hardware:** A página web possui um botão para ligar e desligar o LED conectado ao GPIO 8.
+* **Interface Moderna:** A página utiliza HTML e CSS para criar uma interface dark mode agradável e responsiva.
 
-For more information, refer to the [esp_https_server component documentation](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/protocols/esp_https_server.html).
+## Como Usar
 
-## How to use example
-Before project configuration and build, be sure to set the correct chip target using `idf.py set-target <chip_name>`.
+Siga os passos abaixo para testar o projeto.
 
-### Configure the project
+### 1. Compilação e Gravação
+
+Compile o projeto e grave-o na sua placa ESP32-C3. Depois, abra o monitor serial para ver os logs de inicialização.
+
+```bash
+idf.py -p SUA-PORTA-COM flash monitor
+```
+*(Substitua `SUA-PORTA-COM` pela porta serial correta, como `COM3`).*
+
+### 2. Conectar ao Wi-Fi
+…**http://192.168.4.1**
+
+Você verá a página de controle do LED.
+
+### 4. Controlar o LED
+
+Clique no botão "Alternar LED" na página web. Você verá o LED da sua placa acender e apagar a cada clique. O monitor serial também exibirá o estado atual do LED.
+
+## Saída no Monitor Serial
+
+Abaixo está um exemplo do que você verá no monitor serial quando o sistema iniciar e um dispositivo se conectar.
 
 ```
-idf.py menuconfig
-```
-Open the project configuration menu (`idf.py menuconfig`) to configure Wi-Fi or Ethernet. See "Establishing Wi-Fi or Ethernet Connection" section in [examples/protocols/README.md](../../README.md) for more details.
-
-### Build and Flash
-
-Build the project and flash it to the board, then run monitor tool to view serial output:
-
-```
-idf.py -p PORT flash monitor
+...
+W (438) WiFi-AP: Access Point iniciado. SSID:ESP32-AP senha:12345678
+...
+W (15388) WiFi-AP: Estacao conectada! MAC: 1a:2b:3c:4d:5e:6f, AID: 1
+...
+I (25498) LED: Ligado
+I (28128) LED: Desligado
 ```
 
-(Replace PORT with the name of the serial port to use.)
+## Customização
 
-(To exit the serial monitor, type ``Ctrl-]``.)
+Para modificar o projeto, você pode alterar os seguintes pontos no arquivo `main/main.c`:
 
-See the Getting Started Guide for full steps to configure and use ESP-IDF to build projects.
-
-## Certificates
-
-You will need to approve a security exception in your browser. This is because of a self signed
-certificate; this will be always the case, unless you preload the CA root into your browser/system
-as trusted.
-
-You can generate a new certificate using the OpenSSL command line tool:
-
-```
-openssl req -newkey rsa:2048 -nodes -keyout prvtkey.pem -x509 -days 3650 -out cacert.pem -subj "/CN=ESP32 HTTPS server example"
-```
-
-Expiry time and metadata fields can be adjusted in the invocation.
-
-Please see the openssl man pages (man openssl-req) for more details.
-
-It is **strongly recommended** to not reuse the example certificate in your application;
-it is included only for demonstration.
-
-## Example Output
-
-```
-I (8596) example: Starting server
-I (8596) esp_https_server: Starting server
-I (8596) esp_https_server: Server listening on port 443
-I (8596) example: Registering URI handlers
-I (8606) esp_netif_handlers: example_connect: sta ip: 192.168.194.219, mask: 255.255.255.0, gw: 192.168.194.27
-I (8616) example_connect: Got IPv4 event: Interface "example_connect: sta" address: 192.168.194.219
-I (9596) example_connect: Got IPv6 event: Interface "example_connect: sta" address: fe80:0000:0000:0000:266f:28ff:fe80:2c74, type: ESP_IP6_ADDR_IS_LINK_LOCAL
-I (9596) example_connect: Connected to example_connect: sta
-W (9606) wifi:<ba-add>idx:0 (ifx:0, ee:6d:19:60:f6:0e), tid:0, ssn:2, winSize:64
-I (9616) example_connect: - IPv4 address: 192.168.194.219
-I (9616) example_connect: - IPv6 address: fe80:0000:0000:0000:266f:28ff:fe80:2c74, type: ESP_IP6_ADDR_IS_LINK_LOCAL
-W (14426) wifi:<ba-add>idx:1 (ifx:0, ee:6d:19:60:f6:0e), tid:4, ssn:0, winSize:64
-I (84896) esp_https_server: performing session handshake
-```
+* **Credenciais do Wi-Fi:** Altere as macros `SSID` e `PASSWORD` no início do arquivo.
+* **Pino do LED:** O pino do LED está definido como `GPIO_NUM_8` nas funções `gpio_init()` e `led_get_handler()`.
+* **Aparência da Página:** Todo o código HTML e CSS da página web está contido na variável `const char html_page[]`.

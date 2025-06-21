@@ -1,0 +1,7 @@
+# Arquivos e pastas gerados pelo build do ESP-IDF
+/build/
+/sdkconfig
+/sdkconfig.old
+
+# Arquivos do VS Code
+.vscode/

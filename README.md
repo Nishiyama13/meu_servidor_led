@@ -28,7 +28,17 @@ idf.py -p SUA-PORTA-COM flash monitor
 *(Substitua `SUA-PORTA-COM` pela porta serial correta, como `COM3`).*
 
 ### 2. Conectar ao Wi-Fi
-…**http://192.168.4.1**
+
+Com seu celular ou computador, procure pelas redes Wi-Fi disponíveis e conecte-se à rede criada pelo ESP32.
+
+* **Nome da Rede (SSID):** `ESP32-AP`
+* **Senha:** `12345678`
+
+### 3. Acessar o Servidor Web
+
+Após conectar-se à rede, abra um navegador de internet e acesse o seguinte endereço IP:
+
+**http://192.168.4.1**
 
 Você verá a página de controle do LED.
 
